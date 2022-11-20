@@ -4,17 +4,24 @@ import {Logo as LogoWeb, InstagramLogo, FacebookLogo, BcaLogo, MandiriLogo, BriL
 import RoomIcon from '@mui/icons-material/Room';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import {mobile} from "../../config/responsive";
 
 const Container = styled.div`
     display: flex;
     padding: 0 20px;
     color: teal;
+    ${mobile({
+        flexDirection: 'column'
+    })}
 `; 
 const Left = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 20px;
+    ${mobile({
+        padding: 0
+    })}
 `; 
 
 const Logo = styled.img`
@@ -41,6 +48,9 @@ const Center = styled.div`
     flex: 1;
     flex-direction: column;
     padding: 20px;
+    ${mobile({
+        padding: 0
+    })}
 `; 
 
 const Title = styled.h3`
@@ -57,6 +67,20 @@ const PaymentContainer = styled.div`
     display: flex;
     align-items: center;
     margin-top: 10px;
+    ${mobile({
+        padding: 0,
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    })}
+`;
+
+const SubPaymentContainer = styled.div`
+    ${mobile({
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-arraound',
+        margin: '5px 0'
+    })}
 `;
 
 const Payment = styled.img`
@@ -67,6 +91,10 @@ const Payment = styled.img`
 const Right = styled.div`
     flex: 1;
     padding: 20px;
+    ${mobile({
+        padding: 0,
+        marginBottom: '20px'
+    })}
 `;
 
 const EkspedisiContainer = styled.div`
@@ -112,19 +140,23 @@ const Footer = () => {
             <ContactItem><RoomIcon style={{ marginRight: "10px" }} /> Medan, Sumatera Utara, Indonesia</ContactItem>
             <ContactItem><AccessTimeIcon style={{ marginRight: "10px" }} /> Senin - Sabtu, 08.00 s/d 16.00 WIB</ContactItem>
             <ContactItem><WhatsAppIcon style={{ marginRight: "10px" }} /> 
-                <PhoneNumber>
+                <PhoneNumber onClick={() => window.open('https://wa.me/082162882109')}>
                     0821 6288 2109
                 </PhoneNumber>
                 <span style={{ marginRight: "5px" }}>/</span>
-                <PhoneNumber>
+                <PhoneNumber onClick={() => window.open('https://wa.me/085186336338')}>
                     0851 8633 6338 
                 </PhoneNumber>
                 </ContactItem>
             <PaymentContainer>
-                <Payment src={BcaLogo} />
-                <Payment src={BriLogo} />
-                <Payment src={BniLogo} />
-                <Payment src={MandiriLogo} name="mandiri"/>
+                <SubPaymentContainer>
+                    <Payment src={BcaLogo} />
+                    <Payment src={BriLogo} />
+                </SubPaymentContainer>
+                <SubPaymentContainer>
+                    <Payment src={BniLogo} />
+                    <Payment src={MandiriLogo}/>
+                </SubPaymentContainer>
             </PaymentContainer>
         </Center>
         <Right>

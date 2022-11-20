@@ -1,3 +1,4 @@
+import React, {useEffect} from 'react';
 import "./sidebar.css";
 import {
   LineStyle,
@@ -7,11 +8,26 @@ import {
   ViewCarousel,
   Person
 } from "@mui/icons-material";
-import { Link, useLocation } from "react-router-dom";
+import {useSelector, useDispatch } from 'react-redux'
+import { Link, useLocation, useNavigate} from "react-router-dom";
+import { setDefaultDataAuthUser } from "../../features/user/userSlice";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const dataUser = useSelector(state=>state.user);
+  const navigate = useNavigate()
   const path = useLocation().pathname;
   const sidePath = path.split('/')[2];
+
+  const logout = () => {
+    dispatch(setDefaultDataAuthUser());
+    navigate('/auth/login');
+  }
+  useEffect(() => {
+    if(!dataUser.dataAuthUser){
+      navigate('/auth/login');
+    }
+  }, [dataUser.dataAuthUser]);
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -30,7 +46,7 @@ const Sidebar = () => {
           <h3 className="sidebarTitle">Produk</h3>
           <ul className="sidebarList">
             <Link to="/admin/produk" className="link">
-              <li className={`sidebarListItem ${path === '/admin/produk' || sidePath === 'produk' ? 'active' : ''}`}>
+              <li className={`sidebarListItem ${path === '/admin/produk' || sidePath === 'produk' || sidePath === 'editProduk' ? 'active' : ''}`}>
                 <Storefront className="sidebarIcon" />
                 Data Produk
               </li>
@@ -47,7 +63,7 @@ const Sidebar = () => {
           <h3 className="sidebarTitle">Kategori</h3>
           <ul className="sidebarList">
             <Link to="/admin/kategori" className="link">
-              <li className={`sidebarListItem ${path === '/admin/kategori' ? 'active' : ''}`}>
+              <li className={`sidebarListItem ${path === '/admin/kategori' || sidePath === 'editKategori' ? 'active' : ''}`}>
                 <DynamicFeed className="sidebarIcon" />
                 Data Kategori
               </li>
@@ -63,10 +79,12 @@ const Sidebar = () => {
         <div className="sidebarMenu">
           <h3 className="sidebarTitle">Katalog</h3>
           <ul className="sidebarList">
-            <li className="sidebarListItem">
+            <Link to="/admin/katalog" className="link">
+            <li className={`sidebarListItem ${path === '/admin/katalog' || sidePath === 'editKatalog' ? 'active' : ''}`}>
               <AddCard className="sidebarIcon" />
               Data Katalog
             </li>
+            </Link>
             <Link to="/admin/tambahKatalog" className="link">
             <li className={`sidebarListItem ${path === '/admin/tambahKatalog' ? 'active' : ''}`}>
               <AddCard className="sidebarIcon" />
@@ -79,7 +97,7 @@ const Sidebar = () => {
           <h3 className="sidebarTitle">Banner</h3>
           <ul className="sidebarList">
           <Link to="/admin/banner" className="link">
-            <li className={`sidebarListItem ${path === '/admin/banner' ? 'active' : ''}`}>
+            <li className={`sidebarListItem ${path === '/admin/banner' || sidePath === 'editBanner' ? 'active' : ''}`}>
               <ViewCarousel className="sidebarIcon" />
               Data Banner
             </li>
@@ -95,16 +113,34 @@ const Sidebar = () => {
         <div className="sidebarMenu">
           <h3 className="sidebarTitle">User</h3>
           <ul className="sidebarList">
-          {/* <Link to="/auth/login" className="link"> */}
-            <li className="sidebarListItem">
+            {dataUser.dataAuthUser.data.isAdmin && 
+              <>
+              <Link to="/admin/user" className="link">
+              <li className={`sidebarListItem ${path === '/admin/user' ? 'active' : ''}`}>
+                <Person className="sidebarIcon" />
+                Data User
+              </li>
+              </Link>  
+              <Link to="/admin/tambahUser" className="link">
+              <li className={`sidebarListItem ${path === '/admin/tambahUser' ? 'active' : ''}`}>
+                <Person className="sidebarIcon" />
+                Tambah User
+              </li>
+              </Link> 
+              </>
+            } 
+            <Link to={`/admin/editPassword/${dataUser.dataAuthUser.data._id}`} className="link">
+            <li className={`sidebarListItem ${path === '/admin/editPassword' ? 'active' : ''}`}>
               <Person className="sidebarIcon" />
-              Data User
+              Edit Password
             </li>
-          {/* </Link>  */}
-            <li className="sidebarListItem">
+            </Link> 
+            <div className="link" onClick={logout} >
+            <li className={`sidebarListItem ${path === '/admin/editPassword' ? 'active' : ''}`}>
               <Person className="sidebarIcon" />
-              Tambah User
+              Logout
             </li>
+            </div> 
           </ul>
         </div>
       </div>

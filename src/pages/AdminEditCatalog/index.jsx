@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
 import { Typography, TextField, Button, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from "sweetalert";
-import {createNewCatalog} from "../../features/catalog/catalogSlice";
+import {getCatalogById, editCatalog} from "../../features/catalog/catalogSlice";
  
 const Container = styled.div`
     display: flex;
@@ -42,7 +42,8 @@ const InputContainer = styled.div`
     }
 `;
 
-const AdminCreateCatalog = () => {
+const AdminEditCatalog = () => {
+    const id = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -58,22 +59,31 @@ const AdminCreateCatalog = () => {
             // data.append('link', link);
             const data = {name: name.toLowerCase(), link};
             setLoading(true);
-            dispatch(createNewCatalog(data));
+            dispatch(editCatalog({data, id: id.id}));
         }
         else {
             setErrorInput(true);
         }
     }
     useEffect(() => {
+        dispatch(getCatalogById(id.id));
+    }, []);
+    useEffect(() => {
         if(dataCatalog.dataResponse){
             swal("Success!", "Katalog baru berhasil ditambahkan!", "success");
             setLoading(false);
             navigate('/admin/katalog');
         }
-    }, [dataCatalog.isSuccess])
+    }, [dataCatalog.isSuccess]);
+    useEffect(() => {
+        if(dataCatalog.dataCatalogById) {
+        setName(dataCatalog.dataCatalogById.data.name);
+        setLink(dataCatalog.dataCatalogById.data.link);
+         }   
+    }, [dataCatalog.dataCatalogById]);
   return (
     <Container>
-        <Typography variant="h5">TAMBAH DATA KATALOG</Typography>
+        <Typography variant="h5">EDIT DATA KATALOG</Typography>
         {errorInput &&
         <AlertContainer>
             <Alert severity="error">Semua field harus diisi!</Alert>
@@ -112,10 +122,10 @@ const AdminCreateCatalog = () => {
         {loading ? 
         <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
         :
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Katalog Baru</Button>
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Edit Katalog</Button>
         }
     </Container>
   )
 }
 
-export default AdminCreateCatalog;
+export default AdminEditCatalog;

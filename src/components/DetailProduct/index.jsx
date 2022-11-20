@@ -4,16 +4,27 @@ import {useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import {Skeleton} from "@mui/material";
+import { host_url } from '../../config';
+import {mobile} from "../../config/responsive";
 
 
 const Container = styled.div`
     padding-top: 8.5vh;
+    ${mobile({
+        paddingTop: '7vh'
+    })}
 `;
 
 const Wrapper = styled.div`
     margin-top: 3vh;
     padding: 20px 40px;
     display: flex;
+    ${mobile({
+        flexDirection: 'column',
+        marginTop: '3vh',
+        padding: '0 20px',
+    })}
 `;
 const ImageContainer = styled.div`
     flex: 1;
@@ -22,40 +33,69 @@ const Image = styled.img`
     width: 100%;
     height: 80vh;
     object-fit: cover;
+    ${mobile({
+        width: '100%',
+        height: '35vh',
+        objectFit: 'cover'
+    })}
 `;
 const InfoContainer = styled.div`
     flex: 1;
     padding: 0 40px;
+    ${mobile({
+        padding: 0,
+        margin: '10px 0'
+    })}    
 `;
 const Title = styled.h1`
     font-weight: 200;
     margin-top: 0;
+    ${mobile({
+        fontSize: '25px'
+    })}    
 `;
 const Desc = styled.p`
     margin: 20px 0;
     letter-spacing: 1px;
     line-height: 1.5
+    margin-top: 0;
+    ${mobile({
+        fontSize: '15px',
+        margin: '10px 0'
+    })} 
 `;
 const Price = styled.span`
     font-size: 40px;
     font-weight: 100;
     margin-right: 15px;
+    ${mobile({
+        fontSize: '20px',
+        fontWeight: '300'
+    })} 
 `;
 const ColorContainer = styled.div`
     display: flex;
     margin-top: 20px;
     align-items: center;
+    ${mobile({
+        margin: '10px 0'
+    })} 
 `;
 const ColorTitle = styled.span`
     font-size: 20px;
     font-weight: 200;
     margin-right: 10px;
+    ${mobile({
+        fontSize: '20px',
+        fontWeight: '300'
+    })} 
 `;
 const Color = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background-color: ${props => props.color};
+    border: 1px solid rgba(0,0,0,.125);
     margin-right: 7px;
     cursor: pointer;
 `;
@@ -74,24 +114,31 @@ const ButtonContainer = styled.button`
     &:hover{
         background-color: #f5fafd;
     };
+    ${mobile({
+        margin: '20px 0'
+    })} 
 `;
 const TextButton = styled.span`
     font-size: 14px;
+`;
+const SkeletonContainer = styled.div`
+    width: 100%;
+    height: 80vh;
+    background-color: white
 `;
 
 const DetailProduct = () => {
     const navigate = useNavigate();
   const dataProduct = useSelector(state => state.product);
   const [color, setColor] = useState(0);
+  const data = dataProduct.dataProductById.data;
   return (
     <Container>
-        {dataProduct.isLoading ?
-            <div>sedang loading</div> 
-            :
-            dataProduct.dataProductById ?
-            <Wrapper>
+        <Wrapper>
+        {data ?
+            <>
                 <ImageContainer>
-                    <Image src={require(`../../assets/image/products/${dataProduct.dataProductById.data.color[color].image}`)} />
+                    <Image src={data.colors[color].image ? `${host_url}/${data.colors[color].image}` : ''} />
                 </ImageContainer>
                 <InfoContainer>
                     <Title>{dataProduct.dataProductById.data.name.toUpperCase()}</Title>
@@ -106,7 +153,7 @@ const DetailProduct = () => {
                     }
                     <ColorContainer>
                         <ColorTitle>Colors :</ColorTitle>
-                        {dataProduct.dataProductById.data.color.map((item, index) => 
+                        {dataProduct.dataProductById.data.colors.map((item, index) => 
                             <Color color={item.color} key={index} onClick={() => setColor(index)} />
                         )}
                     </ColorContainer>
@@ -115,10 +162,13 @@ const DetailProduct = () => {
                         <TextButton onClick={() => navigate(-1)}> Back</TextButton>
                     </ButtonContainer>
                 </InfoContainer>
-            </Wrapper>
+            </>
             :
-            <div>data kosong</div>
+            <SkeletonContainer>
+                <Skeleton variant="rounded" width={'100%'} height={'100%'} />
+            </SkeletonContainer>
         }
+        </Wrapper>
     </Container>
   )
 }

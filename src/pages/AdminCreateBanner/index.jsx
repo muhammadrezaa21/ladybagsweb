@@ -1,6 +1,10 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
-import { Typography, TextField, Select, MenuItem, FormControl, InputLabel, Button } from '@mui/material';
+import {useSelector, useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
+import swal from 'sweetalert';
+import { Typography, TextField, Alert, Button } from '@mui/material';
+import { createNewBanner } from '../../features/banner/bannerSlice';
 
 const Container = styled.div`
     display: flex;
@@ -33,6 +37,10 @@ const InputContainer = styled.div`
     }
 `;
 
+const AlertContainer = styled.div`
+    margin-top: 20px
+`;
+
 const ImageRow = styled.div`
     display: flex;
     margin: 10px;
@@ -47,9 +55,51 @@ const InputFile = styled.input`
 `;
 
 const AdminCreateBanner = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [image, setImage] = useState('');
+    const [imagePreview, setImagePreview] = useState();
+    const dataBanner = useSelector(state => state.banner); 
+    const [errorInput, setErrorInput] = useState(false);
+
+    const handleImage = (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+        setImagePreview(URL.createObjectURL(file));
+    }
+
+    const handleSubmit = () => {
+        if(title && desc && image){
+            setErrorInput(false);
+            const data = new FormData();
+            data.append('title', title.toLowerCase());
+            data.append('desc', desc.toLowerCase());
+            data.append('image', image)
+            setLoading(true);
+            dispatch(createNewBanner(data));
+        }
+        else {
+            setErrorInput(true);
+        }
+    };
+    useEffect(() => {
+        if(dataBanner.dataResponse){
+            swal("Success!", "Banner baru berhasil ditambahkan!", "success");
+            setLoading(false);
+            navigate('/admin/banner');
+        }
+    }, [dataBanner.isSuccess]);
   return (
     <Container>
         <Typography variant="h5">TAMBAH DATA BANNER</Typography>
+        {errorInput &&
+        <AlertContainer>
+            <Alert severity="error">Semua field harus diisi!</Alert>
+        </AlertContainer>        
+        }
         <Wrapper>
             <Column>
             <InputContainer>
@@ -59,8 +109,10 @@ const AdminCreateBanner = () => {
                     fullWidth
                     size='normal'
                     type='text'
-                    autoComplete="true"
+                    autoComplete="off"
                     inputProps={{style: {fontSize: 13,}}}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                 />
             </InputContainer>
             <InputContainer>
@@ -72,19 +124,25 @@ const AdminCreateBanner = () => {
                     type='text'
                     multiline={true}
                     minRows={4}
-                    autoComplete="true"
+                    autoComplete="off"
                     inputProps={{style: {fontSize: 13}}}
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
                 />
             </InputContainer>
             <ImageRow>
-                <Image src={require("../../assets/image/banners/slide1.png")} alt="belum ada gambar"/>
+            {imagePreview && <Image src={imagePreview} alt="images"/>}
                 <InputContainer>
-                    <InputFile type='file' />
+                    <InputFile type='file' onChange={handleImage} />
                 </InputContainer>
             </ImageRow>
             </Column>
         </Wrapper>
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} >Tambah Banner Baru</Button>
+        {loading ? 
+        <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
+        :
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Banner Baru</Button>
+        }
     </Container>
   )
 }

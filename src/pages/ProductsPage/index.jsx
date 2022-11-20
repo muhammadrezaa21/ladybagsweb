@@ -1,18 +1,19 @@
 import React, {useEffect} from "react";
 import { Navbar, Footer, ProductsList } from "../../components";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { getAllProduct } from "../../features/product/productSlice";
 import { useDispatch} from "react-redux";
 
 const ProductsPage = () => {
+  const [queryString, setQueryString] = useSearchParams();
   const dispatch = useDispatch();
   const location = useLocation();
   useEffect(() => {
-    dispatch(getAllProduct());
-  }, [])
+    dispatch(getAllProduct(queryString.get('search')));
+  }, [queryString.get('search')])
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname])
+  }, [location.pathname]);
   return (
     <>
       <Navbar />
@@ -20,6 +21,6 @@ const ProductsPage = () => {
       <Footer />
     </>  
   );
-};
+}; 
 
 export default ProductsPage;

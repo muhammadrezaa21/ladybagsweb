@@ -1,48 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import {Navbar, Slider, Categories, Products, Footer} from '../../components';
+import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {getAllBanner} from "../../features/banner/bannerSlice";
-import { getProductByType } from '../../features/product/productSlice';
+import { getAllBanner } from '../../features/banner/bannerSlice';
+import {Skeleton} from '@mui/material';
+
+const Container = styled.div`
+    padding-top: 8.5vh;
+    width: 100%;
+    height: 92vh;
+`;
 
 const HomePage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const dataBanner = useSelector(state => state.banner);
-  const dataCategory = useSelector(state => state.category);
-  const dataProduct = useSelector(state => state.product);
-
-  useEffect(() => {
-    dispatch(getAllBanner());
-    dispatch(getProductByType());
-  }, []);
+  const dataBanner = useSelector(state => state.banner)
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+  useEffect(() => {
+    dispatch(getAllBanner());
+    }, []);
   return (
-    <>
+    <> 
       <Navbar />
-
       {dataBanner.data ? 
-        <Slider data={dataBanner.data} />
+        <Slider dataBanner={dataBanner.data} />
         :
-        <div></div>
+        <Container>
+          <Skeleton variant="rounded" width={'100%'} height={'100%'} />
+        </Container>
       }
-      {dataCategory.data ? 
-        <Categories data={dataCategory.data} />
-        :
-        <div></div>
-      }
-
-      {dataProduct.isLoading ? 
-        <div>sedang Loading</div>
-        :
-        dataProduct.dataProductHome ?
-          <Products page="home" data={dataProduct.dataProductHome.data}/>
-          :
-          <div>data tidak ada</div>
-      }
-
+      <Categories />
+      <Products page="home"/>
       <Footer />
     </>
   )

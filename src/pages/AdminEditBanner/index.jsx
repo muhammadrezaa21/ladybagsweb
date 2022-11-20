@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
-import { createNewCategory } from '../../features/category/categorySlice';
-import { Typography, TextField, Button, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import swal from "sweetalert";
+import {useSelector, useDispatch} from 'react-redux';
+import {useNavigate, useParams} from 'react-router-dom';
+import swal from 'sweetalert';
+import { Typography, TextField, Alert, Button } from '@mui/material';
+import { host_url } from '../../config';
+import { getBannerById, editBanner } from '../../features/banner/bannerSlice';
 
 const Container = styled.div`
     display: flex;
@@ -26,11 +27,7 @@ const Column = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
-`;
-
-const AlertContainer = styled.div`
-    margin-top: 20px
-`;
+`
 
 const InputContainer = styled.div`
     margin: 10px;
@@ -39,6 +36,10 @@ const InputContainer = styled.div`
     -webkit-appearance: none; 
     margin: 0; 
     }
+`;
+
+const AlertContainer = styled.div`
+    margin-top: 20px
 `;
 
 const ImageRow = styled.div`
@@ -53,66 +54,96 @@ const Image = styled.img`
 
 const InputFile = styled.input`
 `;
- 
-const AdminCreateCategory = () => {
+
+const AdminEditBanner = () => {
+    const id = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState('');
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
     const [image, setImage] = useState('');
     const [imagePreview, setImagePreview] = useState();
-    const dataCategory = useSelector(state => state.category); 
+    const dataBanner = useSelector(state => state.banner); 
     const [errorInput, setErrorInput] = useState(false);
+
     const handleImage = (e) => {
         const file = e.target.files[0];
         setImage(file);
         setImagePreview(URL.createObjectURL(file));
     }
+
     const handleSubmit = () => {
-        if(name && image){
+        if(title && desc && image){
             setErrorInput(false);
             const data = new FormData();
-            data.append('name', name.toLowerCase());
+            data.append('title', title.toLowerCase());
+            data.append('desc', desc.toLowerCase());
             data.append('image', image)
             setLoading(true);
-            dispatch(createNewCategory(data));
+            dispatch(editBanner({data, id: id.id}));
         }
         else {
             setErrorInput(true);
         }
-    }
+    };
     useEffect(() => {
-        if(dataCategory.dataResponse){
-            swal("Success!", "Kategori baru berhasil ditambahkan!", "success");
+        dispatch(getBannerById(id.id));
+    }, []);
+    useEffect(() => {
+        if(dataBanner.dataBannerById) {
+        setTitle(dataBanner.dataBannerById.data.title);
+        setDesc(dataBanner.dataBannerById.data.desc);
+        setImage(dataBanner.dataBannerById.data.image);
+         }   
+    }, [dataBanner.dataBannerById]);
+    useEffect(() => {
+        if(dataBanner.dataResponse){
+            swal("Success!", "Banner baru berhasil ditambahkan!", "success");
             setLoading(false);
-            navigate('/admin/kategori');
+            navigate('/admin/banner');
         }
-    }, [dataCategory.isSuccess])
+    }, [dataBanner.isSuccess]);
   return (
     <Container>
-        <Typography variant="h5">TAMBAH DATA KATEGORI</Typography>
+        <Typography variant="h5">EDIT DATA BANNER</Typography>
         {errorInput &&
         <AlertContainer>
             <Alert severity="error">Semua field harus diisi!</Alert>
         </AlertContainer>        
         }
         <Wrapper>
-            <Column> 
+            <Column>
             <InputContainer>
                 <TextField
-                    label="Kategori"
+                    label="Judul Banner"
                     variant="filled"
                     fullWidth
                     size='normal'
                     type='text'
                     autoComplete="off"
                     inputProps={{style: {fontSize: 13,}}}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+            </InputContainer>
+            <InputContainer>
+                <TextField
+                    label="Deskripsi Banner"
+                    variant="filled"
+                    fullWidth
+                    size='normal'
+                    type='text'
+                    multiline={true}
+                    minRows={4}
+                    autoComplete="off"
+                    inputProps={{style: {fontSize: 13}}}
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
                 />
             </InputContainer>
             <ImageRow>
-                {imagePreview && <Image src={imagePreview} alt="images"/>}
+            {imagePreview ? <Image src={imagePreview} alt="images"/> : <Image src={image ? `${host_url}/${image}` : ''} alt="images"/>}
                 <InputContainer>
                     <InputFile type='file' onChange={handleImage} />
                 </InputContainer>
@@ -122,10 +153,10 @@ const AdminCreateCategory = () => {
         {loading ? 
         <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
         :
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Kategori Baru</Button>
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Edit Banner</Button>
         }
     </Container>
   )
 }
 
-export default AdminCreateCategory;
+export default AdminEditBanner;

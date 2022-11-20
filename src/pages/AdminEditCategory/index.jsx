@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
+import { getCategoryById, editCategory } from '../../features/category/categorySlice';
+import { host_url } from '../../config';
 import { Typography, TextField, Button, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from "sweetalert";
-import {createNewCatalog} from "../../features/catalog/catalogSlice";
- 
+
 const Container = styled.div`
     display: flex;
     flex: 4;
@@ -14,11 +15,11 @@ const Container = styled.div`
     border: 1px solid rgba(0,0,0,.125);
     margin: 0 10px 10px 10px;
     border-radius: 5px;
-`; 
+`;
 
 const Wrapper = styled.div`
     display: flex;
-    width: 50%;
+    width: 30%;
     padding: 20px;
 `;
 
@@ -33,7 +34,6 @@ const AlertContainer = styled.div`
 `;
 
 const InputContainer = styled.div`
-    width: ${props => props.type === 'link' ? '100%' : '50%'};
     margin: 10px;
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
@@ -42,38 +42,66 @@ const InputContainer = styled.div`
     }
 `;
 
-const AdminCreateCatalog = () => {
+const ImageRow = styled.div`
+    display: flex;
+    margin: 10px;
+`;
+
+const Image = styled.img`
+    width: 150px;
+    height: 150px;
+`;
+
+const InputFile = styled.input`
+`; 
+
+const AdminEditCategory = () => {
+    const id = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
-    const [link, setLink] = useState('');
+    const [image, setImage] = useState('');
+    const [imagePreview, setImagePreview] = useState(); 
+    const dataCategory = useSelector(state => state.category); 
     const [errorInput, setErrorInput] = useState(false);
-    const dataCatalog = useSelector(state => state.catalog);
+    const handleImage = (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+        setImagePreview(URL.createObjectURL(file));
+    }
     const handleSubmit = () => {
-        if(name && link){
+        if(name && image){
             setErrorInput(false);
-            // const data = new FormData();
-            // data.append('name', name.toLowerCase());
-            // data.append('link', link);
-            const data = {name: name.toLowerCase(), link};
+            const data = new FormData();
+            data.append('name', name.toLowerCase());
+            data.append('image', image)
             setLoading(true);
-            dispatch(createNewCatalog(data));
+            dispatch(editCategory({data, id: id.id}));
         }
         else {
             setErrorInput(true);
         }
     }
     useEffect(() => {
-        if(dataCatalog.dataResponse){
-            swal("Success!", "Katalog baru berhasil ditambahkan!", "success");
+        dispatch(getCategoryById(id.id));
+    }, []);
+    useEffect(() => {
+        if(dataCategory.dataResponse){
+            swal("Success!", "Kategori berhasil diubah!", "success");
             setLoading(false);
-            navigate('/admin/katalog');
+            navigate('/admin/kategori');
         }
-    }, [dataCatalog.isSuccess])
+    }, [dataCategory.isSuccess]);
+    useEffect(() => {
+        if(dataCategory.dataCategoryById) {
+        setName(dataCategory.dataCategoryById.data.name);
+        setImage(dataCategory.dataCategoryById.data.image);
+         }   
+    }, [dataCategory.dataCategoryById]);
   return (
     <Container>
-        <Typography variant="h5">TAMBAH DATA KATALOG</Typography>
+        <Typography variant="h5">EDIT DATA KATEGORI</Typography>
         {errorInput &&
         <AlertContainer>
             <Alert severity="error">Semua field harus diisi!</Alert>
@@ -83,10 +111,10 @@ const AdminCreateCatalog = () => {
             <Column> 
             <InputContainer>
                 <TextField
-                    label="Nama Katalog"
+                    label="Kategori"
                     variant="filled"
                     fullWidth
-                    size='normal'
+                    size='normal' 
                     type='text'
                     autoComplete="off"
                     inputProps={{style: {fontSize: 13,}}}
@@ -94,28 +122,21 @@ const AdminCreateCatalog = () => {
                     onChange={(e) => setName(e.target.value)}
                 />
             </InputContainer>
-            <InputContainer type={'link'}>
-                <TextField
-                    label="Link Katalog"
-                    variant="filled"
-                    fullWidth
-                    size='normal'
-                    type='text'
-                    autoComplete="off"
-                    inputProps={{style: {fontSize: 13,}}}
-                    value={link}
-                    onChange={(e) => setLink(e.target.value)}
-                />
-            </InputContainer>
+            <ImageRow>
+                {imagePreview ? <Image src={imagePreview} alt="images"/> : <Image src={image ? `${host_url}/${image}` : ''} alt="images"/>}
+                <InputContainer>
+                    <InputFile type='file' onChange={handleImage} />
+                </InputContainer>
+            </ImageRow>
             </Column>
         </Wrapper>
         {loading ? 
         <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
         :
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Katalog Baru</Button>
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Edit Kategori</Button>
         }
     </Container>
   )
 }
 
-export default AdminCreateCatalog;
+export default AdminEditCategory;

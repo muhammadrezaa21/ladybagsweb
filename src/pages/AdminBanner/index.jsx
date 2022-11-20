@@ -1,10 +1,13 @@
-import { Typography } from '@mui/material';
-import React from 'react'
+import { Typography, Skeleton } from '@mui/material';
+import React, {useEffect} from 'react'
 import styled from 'styled-components';
 import {Link} from "react-router-dom";
-import { useSelector } from 'react-redux';
+import swal from 'sweetalert';
+import { useSelector, useDispatch } from 'react-redux';
 import { DataGrid} from '@mui/x-data-grid';
 import {DeleteOutline} from "@mui/icons-material";
+import { host_url } from '../../config';
+import { getAllBanner, setDefaultDataResponse, deleteBanner } from '../../features/banner/bannerSlice';
 
 const Container = styled.div`
     display: flex;
@@ -35,16 +38,36 @@ const Image = styled.img`
     object-fit: cover
 `;
 
+const DeleteContainer = styled.div`
+  cursor: pointer
+`;
+
 const AdminBanner = () => {
+  const dispatch = useDispatch();
   const dataBanner = useSelector(state => state.banner);
+
+  const handleDelete = (id) => {
+    swal({
+      title: "Apakah anda yakin?",
+      text: "Banner akan dihapus ketika menekan tombol OK",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        dispatch(deleteBanner(id));
+        swal("Success", "Banner berhasil dihapus", "success");
+      } else {
+        swal("Banner gagal dihapus");
+      }
+    });
+  }
 
   const columns = [
     { field: 'title', headerName: 'JUDUL BANNER', width: 200,
     renderCell: (params) => {
       return(
-        <Link style={{ textDecoration: 'none', color: 'black' }} to={`/admin/banner/${params.row._id}`}>
           <Title>{params.row.title}</Title>
-        </Link>
       )
     },
     },
@@ -52,7 +75,7 @@ const AdminBanner = () => {
     { field: 'image', headerName: 'GAMBAR KATEGORI', width: 200,
     renderCell: (params) => {
         return(
-          <Image src={require(`../../assets/image/banners/${params.row.image}`)} />
+          <Image src={params.row.image ? `${host_url}/${params.row.image}` : ''} />
         )
     },
     },
@@ -63,18 +86,25 @@ const AdminBanner = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link style={{ textDecoration: 'none' }} to={`/admin/editKategori/${params.row._id}`}>
+            <Link style={{ textDecoration: 'none' }} to={`/admin/editBanner/${params.row._id}`}>
               <ButtonEdit>EDIT</ButtonEdit>
             </Link>
-            <Link style={{ textDecoration: 'none' }} to={`/admin/hapusKategori/${params.row._id}`}>
+            <DeleteContainer onClick={() => handleDelete(params.row._id)} >
               <DeleteOutline style={{ fontSize: 30, color: "red", cursor: 'pointer'}}/>
-            </Link>
+            </DeleteContainer>
           </>
         );
       },
     },
   ];
-
+  useEffect(() => {
+    dispatch(setDefaultDataResponse());
+    dispatch(getAllBanner());
+  }, [dataBanner.dataResponse]);
+  useEffect(() => {
+    dispatch(getAllBanner());
+    dispatch(setDefaultDataResponse());
+  }, []);
   return (
     <Container>
         <Typography variant="h5">Data Banner</Typography>
@@ -88,7 +118,7 @@ const AdminBanner = () => {
             sx={{ textTransform: 'uppercase', marginTop: 1 }}
           />
           :
-          <div>Tidak ada data</div>
+          <Skeleton variant="rounded" width={'100%'} height={'100%'} />
         }
     </Container>
   )

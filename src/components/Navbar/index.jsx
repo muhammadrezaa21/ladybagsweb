@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import {Logo} from '../../assets';
-import {Link, useLocation} from "react-router-dom";
+import {Link, useNavigate, useLocation} from "react-router-dom";
 import { useSelector } from 'react-redux';
+import {mobile} from "../../config/responsive";
+import DehazeIcon from '@mui/icons-material/Dehaze';
 
 const Container = styled.div`
     position: fixed;
@@ -16,6 +18,9 @@ const Container = styled.div`
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
     -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
+    ${mobile({
+        height: '7vh',
+    })}
 `;
 
 const Wrapper = styled.div`
@@ -23,28 +28,56 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    ${mobile({
+        paddingHorizontal: '5px',
+        paddingVertical: '5px',
+    })}
 `;
 
 const Left = styled.div`
-    display: flex; flex: 1; 
+    display: flex;
+    flex: 1; 
     margin-top: -2px
-    background-color: red;
 `;
 
 const Image = styled.img`
     width: 100px;
+    ${mobile({
+        width: '75px',
+        marginLeft: '-20px'
+    })}
 `;
 
 const Center = styled.div`
     display: flex;
     flex: 2;
     align-items: center;
+    ${mobile({
+        display: 'flex',
+        flex: 1,
+    })}
 `;
 const Right = styled.div`
     display: flex;
     flex: 2;
-`;
-
+    @media only screen and (max-width: 480px) {
+        position: absolute;
+        left: 0;
+        top: 7vh;
+        flex: 1;
+        flex-direction: column;
+        width: 100%;
+        padding: 10px 10px 10px 20px;
+        background-color: white;
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
+        -box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
+        z-index: -1000;
+        transform: ${props => props.isToogle ? 'translateX(0%)' : 'translateX(100%)'};
+        transition: all 0.8s;
+    }
+    `;
+    
 const SearchContainer = styled.div`
     border: 0.5px solid lightgray;
     display: flex;
@@ -52,6 +85,10 @@ const SearchContainer = styled.div`
     padding: 5px;
     align-items: center;
     width: 60%;
+    ${mobile({
+        width: '50vw',
+        marginRight: '13px'
+    })}
 `;
 
 const Input = styled.input`
@@ -60,6 +97,9 @@ const Input = styled.input`
     &:focus{
         outline: none;
     }
+    ${mobile({
+        width: '100%'
+    })}
 `;
 
 const IconSearchContainer = styled.div`
@@ -74,6 +114,13 @@ const SubItemContainer = styled.div`
     padding: 5px;
     display: none;
     transition: ease;
+    @media only screen and (max-width: 480px) {
+        border: none;
+        position: static;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.8s;
+    }    
 `;
 
 const MenuItem = styled.div`
@@ -88,6 +135,9 @@ const MenuItem = styled.div`
     &:hover ${SubItemContainer}{
         display: block
     }
+    ${mobile({
+        margin: '10px 0',
+    })}
 `;
 
 const SubItem = styled.div`
@@ -102,36 +152,80 @@ const SubItem = styled.div`
         color: teal;
         border-color: teal;
     }
-`; 
+    ${mobile({
+        border: 'none'
+    })}
+`;
+
+const ToogleContainer = styled.div`
+    display: none;
+    cursor: none;
+    ${mobile({
+        display: 'flex',
+        cursor: 'pointer'
+    })}
+`;
+
 
 const Navbar = () => {
     const dataCategory = useSelector(state => state.category.data.data);
     const location = useLocation().pathname;
+    const navigate = useNavigate();
     const path = location.split("/");
+    const [query, setQuery] = useState('');
+    const [isToogle, setIsToogle] = useState(false);
+    const [isCategoryToogle, setIsCategoryToogle] = useState(false);
+    const handleClick = () => {
+        const searchQuery = query.toLowerCase();
+        navigate(`/produk?search=${searchQuery}`);
+    }
+    const handleEnter = (e) => {
+        if(e.key === 'Enter'){
+            const searchQuery = query.toLowerCase();
+            navigate(`/produk?search=${searchQuery}`);
+        }
+    }
+    const handleToogle = () => {
+        if(isToogle){
+            setIsToogle(false);
+        } else{
+            setIsToogle(true);
+        }
+    }
+    const handleCategoryToogle = () => {
+        if(isCategoryToogle){
+            setIsCategoryToogle(false);
+        } else{
+            setIsCategoryToogle(true);
+        }
+    }
+    useEffect(() => {
+        setIsToogle(false);
+    }, [location])
   return (
     <Container>
         <Wrapper>
-            <Left> 
+            <Left onClick={() => navigate('/')}> 
                 <Image src={Logo} alt="Ladibags logo" />
             </Left>
             <Center>
                 <SearchContainer>
-                    <Input placeholder="Cari Produk" />
-                    <IconSearchContainer>
+                    <Input placeholder="Cari Produk" type="text" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={handleEnter} />
+                    <IconSearchContainer onClick={handleClick}>
                         <SearchIcon style={{ fontSize: 16, color: "gray" }} />
                     </IconSearchContainer>
                 </SearchContainer>
             </Center>
-            <Right>
+            <Right isToogle={isToogle}>
                 <Link style={{ textDecoration: 'none', color: 'black' }} to={'/'} >
                     <MenuItem path={path[1]} name={''}>HOME</MenuItem> 
                 </Link>
-                <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/produk'}>
+                <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/produk?search=all_product'}>
                     <MenuItem path={path[1]} name={'produk'}>PRODUK</MenuItem>
                 </Link>
-                    <MenuItem path={path[1]} name={'kategori'}>
+                    <MenuItem onClick={handleCategoryToogle} path={path[1]} name={'kategori'}>
                         KATEGORI
-                        <SubItemContainer>
+                        <SubItemContainer isCategoryToogle={isCategoryToogle}>
                             {dataCategory ?
                                 dataCategory.map((item) => (
                                     <Link key={item._id} style={{ textDecoration: 'none', color: 'black'  }} to={`/kategori/${item.name}`}>
@@ -150,6 +244,9 @@ const Navbar = () => {
                     <MenuItem path={path[1]} name={'tentangkami'}>TENTANG KAMI</MenuItem>
                 </Link>
             </Right>
+            <ToogleContainer onClick={handleToogle}>
+                <DehazeIcon style={{ color: "gray" }}  />
+            </ToogleContainer>
         </Wrapper>
     </Container>
   )

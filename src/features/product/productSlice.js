@@ -7,6 +7,7 @@ const initialState = {
   dataProducts: false,
   dataProductCategory: false,
   dataProductById: false,
+  data: false,
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -14,8 +15,8 @@ const initialState = {
 
 export const getAllProduct = createAsyncThunk(
   "products/getAllProduct",
-  async () => {
-    const response = await axios.get(`${host_url_api}product`);
+  async (query) => {
+    const response = await axios.get(`${host_url_api}product?query=${query}`);
     return response.data;
   }
 );
@@ -44,11 +45,42 @@ export const getProductById = createAsyncThunk(
     return response.data;
   }
 );
+export const createNewProduct = createAsyncThunk(
+  "products/createNewProduct",
+  async (data) => {
+    const response = await axios.post(`${host_url_api}product`, data);
+    return response.data;
+  }
+);
+export const editProduct = createAsyncThunk(
+  "products/editProduct",
+  async (data) => {
+    const response = await axios.put(
+      `${host_url_api}product/${data.id}`,
+      data.data
+    );
+    return response.data;
+  }
+);
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id) => {
+    const response = await axios.delete(`${host_url_api}product/${id}`);
+    return response.data;
+  }
+);
 
 export const productSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    setDefaultIsSuccess: (state) => {
+      state.isSuccess = false;
+    },
+    setDefaultData: (state) => {
+      state.data = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAllProduct.pending, (state, action) => {
       state.isLoading = true;
@@ -90,7 +122,38 @@ export const productSlice = createSlice({
       state.isSuccess = true;
       state.dataProductById = action.payload;
     });
+    builder.addCase(createNewProduct.pending, (state, action) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.data = false;
+    });
+    builder.addCase(createNewProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.data = action.payload;
+    });
+    builder.addCase(editProduct.pending, (state, action) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.data = false;
+    });
+    builder.addCase(editProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.data = action.payload;
+    });
+    builder.addCase(deleteProduct.pending, (state, action) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.data = false;
+    });
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.data = action.payload;
+    });
   },
 });
 
+export const { setDefaultIsSuccess, setDefaultData } = productSlice.actions;
 export default productSlice.reducer;

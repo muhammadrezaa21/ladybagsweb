@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import {getProductById} from "../../features/product/productSlice";
+import { host_url } from '../../config';
 import { formatRupiah } from '../../config/formatRupiah';
 import { useParams, useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import { Typography } from '@mui/material';
+import { Typography, Skeleton } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const Container = styled.div`
@@ -62,6 +63,7 @@ const Color = styled.div`
     height: 20px;
     border-radius: 50%;
     background-color: ${props => props.color};
+    border: 1px solid rgba(0,0,0,.125);
     margin-right: 7px;
     cursor: pointer;
 `;
@@ -87,20 +89,20 @@ const TextButton = styled.span`
 
 const AdminDetaiProduct = () => {
     const id = useParams();
-    const navigate = useNavigate()
-;    const dispatch = useDispatch();
+    const navigate = useNavigate();    
+    const dispatch = useDispatch();
     const [color, setColor] = useState(0);
     const dataProduct = useSelector(state => state.product);
     useEffect(() => {
         dispatch(getProductById(id.id));
-    }, [])
+    }, []);
   return (
     <Container>
         <Typography variant="h5">Detail Produk</Typography>
         {dataProduct.dataProductById ? 
             <Wrapper>
                 <ImageContainer>
-                    <Image src={require(`../../assets/image/products/${dataProduct.dataProductById.data.color[color].image}`)} />
+                    <Image src={`${host_url}/${dataProduct.dataProductById.data.colors[color].image}`} />
                 </ImageContainer>
                 <InfoContainer>
                     <Title>{dataProduct.dataProductById.data.name.toUpperCase()}</Title>
@@ -115,7 +117,7 @@ const AdminDetaiProduct = () => {
                     }
                     <ColorContainer>
                         <ColorTitle>Colors :</ColorTitle>
-                        {dataProduct.dataProductById.data.color.map((item, index) => 
+                        {dataProduct.dataProductById.data.colors.map((item, index) => 
                             <Color color={item.color} key={index} onClick={() => setColor(index)} />
                         )}
                     </ColorContainer>
@@ -126,7 +128,7 @@ const AdminDetaiProduct = () => {
                 </InfoContainer>
             </Wrapper>
             :
-            <div>data tidak ditemukan</div>
+            <Skeleton variant="rounded" width={'100%'} height={'100%'} />
         }
     </Container>
   )

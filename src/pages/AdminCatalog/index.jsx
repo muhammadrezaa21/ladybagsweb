@@ -1,7 +1,6 @@
 import { Typography, Skeleton } from '@mui/material';
 import React, {useEffect, useState} from 'react'
-import { host_url } from '../../config';
-import {setDefaultDataResponse, getAllCategory, deleteCategory} from '../../features/category/categorySlice';
+import {setDefaultDataResponse, getAllCatalog, deleteCatalog} from '../../features/catalog/catalogSlice';
 import styled from 'styled-components';
 import {Link} from "react-router-dom";
 import swal from "sweetalert"
@@ -19,10 +18,6 @@ const Container = styled.div`
     border-radius: 5px;
 `;
 
-const Title = styled.div`
-  cursor: pointer;
-`;
-
 const ButtonEdit = styled.div`
   border-radius: 10px;
   padding: 5px 10px;
@@ -32,49 +27,50 @@ const ButtonEdit = styled.div`
   margin-right: 20px;
 `;
 
-const Image = styled.img`
-    margin: 10px 0;
-    width: 70px;
-    object-fit: cover
+const TitleContainer = styled.div`
+  cursor: pointer;
 `;
-
+const Title = styled.div`
+`;
 const DeleteContainer = styled.div`
   cursor: pointer
 `;
 
-const AdminCategory = () => {
+const AdminCatalog = () => {
   const dispatch = useDispatch();
-  const dataCategory = useSelector(state => state.category);
+  const dataCatalog = useSelector(state => state.catalog);
 
   const handleDelete = (id) => {
     swal({
       title: "Apakah anda yakin?",
-      text: "Kategori akan dihapus ketika menekan tombol OK",
+      text: "Katalog akan dihapus ketika menekan tombol OK",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        dispatch(deleteCategory(id));
-        swal("Success", "Kategori berhasil dihapus", "success");
+        dispatch(deleteCatalog(id));
+        swal("Success", "Katalog berhasil dihapus", "success");
       } else {
-        swal("Kategori gagal dihapus");
+        swal("Katalog gagal dihapus");
       }
     });
   }
 
   const columns = [
-    { field: 'name', headerName: 'KATEGORI', width: 300,
+    { field: 'name', headerName: 'KATALOG', width: 300,
     renderCell: (params) => {
       return(
-          <Title>{params.row.name}</Title>
+            <Title>{params.row.name}</Title>
       )
     },
     },
-    { field: 'image', headerName: 'GAMBAR KATEGORI', width: 400,
+    { field: 'link', headerName: 'URL LINK', width: 400,
     renderCell: (params) => {
         return(
-          <Image src={params.row.image ? `${host_url}/${params.row.image}` : ''} />
+            <TitleContainer onClick={() => window.open(`${params.row.link}`)}>
+                <Title>{params.row.link}</Title>
+            </TitleContainer>  
         )
     },
     },
@@ -85,7 +81,7 @@ const AdminCategory = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link style={{ textDecoration: 'none' }} to={`/admin/editKategori/${params.row._id}`}>
+            <Link style={{ textDecoration: 'none' }} to={`/admin/editKatalog/${params.row._id}`}>
               <ButtonEdit>EDIT</ButtonEdit>
             </Link>
             <DeleteContainer onClick={() => handleDelete(params.row._id)} >
@@ -99,22 +95,22 @@ const AdminCategory = () => {
 
   useEffect(() => {
     dispatch(setDefaultDataResponse());
-    dispatch(getAllCategory());
-  }, [dataCategory.dataResponse]);
+    dispatch(getAllCatalog());
+  }, [dataCatalog.dataResponse]);
   useEffect(() => {
-    dispatch(getAllCategory());
+    dispatch(getAllCatalog());
     dispatch(setDefaultDataResponse());
   }, []);
 
   return (
     <Container>
-        <Typography variant="h5">Data Kategori</Typography>
-        {dataCategory.data ? 
+        <Typography variant="h5">Data Katalog</Typography>
+        {dataCatalog.data ? 
           <DataGrid
-            rows={dataCategory.data.data}
+            rows={dataCatalog.data.data}
             columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
             getRowId={(row) => row._id}
             sx={{ textTransform: 'uppercase', marginTop: 1 }}
           />
@@ -125,7 +121,7 @@ const AdminCategory = () => {
   )
 }
 
-export default AdminCategory;
+export default AdminCatalog;
 
 
 

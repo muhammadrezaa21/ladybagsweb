@@ -4,7 +4,7 @@ import { Typography, TextField, Button, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from "sweetalert";
-import {createNewCatalog} from "../../features/catalog/catalogSlice";
+import {register} from "../../features/user/userSlice";
  
 const Container = styled.div`
     display: flex;
@@ -18,7 +18,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
     display: flex;
-    width: 50%;
+    width: 40%;
     padding: 20px;
 `;
 
@@ -33,7 +33,7 @@ const AlertContainer = styled.div`
 `;
 
 const InputContainer = styled.div`
-    width: ${props => props.type === 'link' ? '100%' : '50%'};
+    width: 100%;
     margin: 10px;
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
@@ -42,38 +42,35 @@ const InputContainer = styled.div`
     }
 `;
 
-const AdminCreateCatalog = () => {
+const AdminCreateUser = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
     const [name, setName] = useState('');
-    const [link, setLink] = useState('');
     const [errorInput, setErrorInput] = useState(false);
-    const dataCatalog = useSelector(state => state.catalog);
+    const dataUser = useSelector(state => state.user);
     const handleSubmit = () => {
-        if(name && link){
+        if(email && name){
             setErrorInput(false);
-            // const data = new FormData();
-            // data.append('name', name.toLowerCase());
-            // data.append('link', link);
-            const data = {name: name.toLowerCase(), link};
+            const data = {email, name: name.toLowerCase()};
             setLoading(true);
-            dispatch(createNewCatalog(data));
+            dispatch(register(data));
         }
         else {
             setErrorInput(true);
         }
     }
     useEffect(() => {
-        if(dataCatalog.dataResponse){
-            swal("Success!", "Katalog baru berhasil ditambahkan!", "success");
+        if(dataUser.dataResponse){
+            swal("Success!", "User baru berhasil ditambahkan!", "success");
             setLoading(false);
-            navigate('/admin/katalog');
+            navigate('/admin/user');
         }
-    }, [dataCatalog.isSuccess])
+    }, [dataUser.isSuccess])
   return (
     <Container>
-        <Typography variant="h5">TAMBAH DATA KATALOG</Typography>
+        <Typography variant="h5">TAMBAH DATA USER</Typography>
         {errorInput &&
         <AlertContainer>
             <Alert severity="error">Semua field harus diisi!</Alert>
@@ -83,7 +80,20 @@ const AdminCreateCatalog = () => {
             <Column> 
             <InputContainer>
                 <TextField
-                    label="Nama Katalog"
+                    label="Email User"
+                    variant="filled"
+                    fullWidth
+                    size='normal'
+                    type='email'
+                    autoComplete="off"
+                    inputProps={{style: {fontSize: 13,}}}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+            </InputContainer>
+            <InputContainer>
+                <TextField
+                    label="Nama User"
                     variant="filled"
                     fullWidth
                     size='normal'
@@ -94,28 +104,15 @@ const AdminCreateCatalog = () => {
                     onChange={(e) => setName(e.target.value)}
                 />
             </InputContainer>
-            <InputContainer type={'link'}>
-                <TextField
-                    label="Link Katalog"
-                    variant="filled"
-                    fullWidth
-                    size='normal'
-                    type='text'
-                    autoComplete="off"
-                    inputProps={{style: {fontSize: 13,}}}
-                    value={link}
-                    onChange={(e) => setLink(e.target.value)}
-                />
-            </InputContainer>
             </Column>
         </Wrapper>
         {loading ? 
         <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
         :
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Katalog Baru</Button>
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah User Baru</Button>
         }
     </Container>
   )
 }
 
-export default AdminCreateCatalog;
+export default AdminCreateUser;

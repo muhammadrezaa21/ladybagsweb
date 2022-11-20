@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { formatRupiah } from '../../config/formatRupiah';
+import { host_url } from '../../config';
+import {mobile} from "../../config/responsive";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Wrapper = styled.div`
@@ -24,7 +26,12 @@ const Container = styled.div`
     position: relative;
     &:hover ${Wrapper} {
         cursor: pointer;
-        opacity: 0.5
+        opacity: 0.5;
+    };
+    @media only screen and (max-width: 480px) {
+        min-width: 43vw;
+        height: 28vh;
+        margin: 4px 0;
     }
 `;
 
@@ -67,19 +74,24 @@ const Subinfo = styled.div`
 const Title = styled.h3`
     margin: 0;
     margin-left: 7px;
+    ${mobile({
+        fontSize: '15px'
+    })}
 `;
 const Price = styled.p`
     margin: 0 10px 0 0;
     font-size: 16px;
     font-weight: 600;
+    ${mobile({
+        fontSize: '12px'
+    })}
 `;
-
 const ProductItem = ({item}) => { 
     const location = useLocation().pathname;
     const navigate = useNavigate();
   return (
     <Container location={location} onClick={() => navigate(`/produk/${item._id}`)}>
-        <Image src={require(`../../assets/image/products/${item.color[0].image}`)} />
+        <Image src={item.colors[0].image ? `${host_url}/${item.colors[0].image}` : ''} />
         <Wrapper />
         {item.type !== 'normal' &&
             <TypeContainer>

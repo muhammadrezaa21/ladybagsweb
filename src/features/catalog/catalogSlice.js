@@ -5,56 +5,56 @@ import axios from "axios";
 const initialState = {
   data: false,
   dataResponse: false,
-  dataBannerById: false,
+  dataCatalogById: false,
   isLoading: false,
   isSuccess: false,
   isError: false,
 };
 
-export const getAllBanner = createAsyncThunk(
-  "banners/getAllBanner",
-  async () => {
-    const response = await axios.get(`${host_url_api}banner`);
-    return response.data;
-  }
-);
-
-export const getBannerById = createAsyncThunk(
-  "banners/getBannerById",
-  async (id) => {
-    const response = await axios.get(`${host_url_api}banner/${id}`);
-    return response.data;
-  }
-);
-
-export const createNewBanner = createAsyncThunk(
-  "banners/createNewBanner",
+export const createNewCatalog = createAsyncThunk(
+  "category/createNewCatalog",
   async (data) => {
-    const response = await axios.post(`${host_url_api}banner`, data);
+    const response = await axios.post(`${host_url_api}catalog`, data);
     return response.data;
   }
 );
 
-export const editBanner = createAsyncThunk(
-  "banners/editBanner",
+export const editCatalog = createAsyncThunk(
+  "catalog/editCatalog",
   async (data) => {
     const response = await axios.put(
-      `${host_url_api}banner/${data.id}`,
+      `${host_url_api}catalog/${data.id}`,
       data.data
     );
     return response.data;
   }
 );
-export const deleteBanner = createAsyncThunk(
-  "banners/deleteBanner",
-  async (id) => {
-    const response = await axios.delete(`${host_url_api}banner/${id}`);
+
+export const getAllCatalog = createAsyncThunk(
+  "catalog/getAllCatalog",
+  async () => {
+    const response = await axios.get(`${host_url_api}catalog`);
     return response.data;
   }
 );
 
-export const bannerSlice = createSlice({
-  name: "banner",
+export const getCatalogById = createAsyncThunk(
+  "catalog/getCatalogById",
+  async (id) => {
+    const response = await axios.get(`${host_url_api}catalog/${id}`);
+    return response.data;
+  }
+);
+export const deleteCatalog = createAsyncThunk(
+  "catalog/deleteCatalog",
+  async (id) => {
+    const response = await axios.delete(`${host_url_api}catalog/${id}`);
+    return response.data;
+  }
+);
+
+export const catalogSlice = createSlice({
+  name: "catalog",
   initialState,
   reducers: {
     setDefaultIsSuccess: (state) => {
@@ -65,58 +65,59 @@ export const bannerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getAllBanner.pending, (state, action) => {
+    builder.addCase(getAllCatalog.pending, (state, action) => {
       state.isLoading = true;
       state.isSuccess = false;
       state.data = false;
     });
-    builder.addCase(getAllBanner.fulfilled, (state, action) => {
+    builder.addCase(getAllCatalog.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
       state.data = action.payload;
     });
-    builder.addCase(getBannerById.pending, (state, action) => {
+    builder.addCase(getCatalogById.pending, (state, action) => {
       state.isLoading = true;
       state.isSuccess = false;
-      state.dataBannerById = false;
+      state.dataCatalogById = false;
     });
-    builder.addCase(getBannerById.fulfilled, (state, action) => {
+    builder.addCase(getCatalogById.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.dataBannerById = action.payload;
+      state.dataCatalogById = action.payload;
     });
-    builder.addCase(createNewBanner.pending, (state, action) => {
+    builder.addCase(createNewCatalog.pending, (state, action) => {
       state.isLoading = true;
       state.isSuccess = false;
       state.dataResponse = false;
     });
-    builder.addCase(createNewBanner.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.dataResponse = action.payload;
-    });
-    builder.addCase(editBanner.pending, (state, action) => {
-      state.isLoading = true;
-      state.isSuccess = false;
-      state.dataResponse = false;
-    });
-    builder.addCase(editBanner.fulfilled, (state, action) => {
+    builder.addCase(createNewCatalog.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
       state.dataResponse = action.payload;
     });
-    builder.addCase(deleteBanner.pending, (state, action) => {
+    builder.addCase(editCatalog.pending, (state, action) => {
       state.isLoading = true;
       state.isSuccess = false;
       state.dataResponse = false;
     });
-    builder.addCase(deleteBanner.fulfilled, (state, action) => {
+    builder.addCase(editCatalog.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.dataResponse = action.payload;
+    });
+    builder.addCase(deleteCatalog.pending, (state, action) => {
+      state.isLoading = true;
+      state.isSuccess = false;
+      state.dataResponse = false;
+    });
+    builder.addCase(deleteCatalog.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
       state.dataResponse = action.payload;
     });
   },
 });
+
 export const { setDefaultIsSuccess, setDefaultDataResponse } =
-  bannerSlice.actions;
-export default bannerSlice.reducer;
+  catalogSlice.actions;
+export default catalogSlice.reducer;

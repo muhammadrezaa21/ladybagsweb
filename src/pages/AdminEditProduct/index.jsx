@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
-import {createNewProduct} from "../../features/product/productSlice";
+import {editProduct, getProductById} from "../../features/product/productSlice";
+import { host_url } from '../../config';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import swal from "sweetalert";
 import { Typography, TextField, Select, MenuItem, FormControl, InputLabel, Button, Alert } from '@mui/material';
 const Container = styled.div`
@@ -66,8 +67,9 @@ const Image = styled.img`
 const InputFile = styled.input`
     margin-top: 20px;
 `;
- 
-const AdminCreateProduct = () => {
+
+const AdminEditProduct = () => {
+    const id = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -130,26 +132,40 @@ const AdminCreateProduct = () => {
                 colors.map((item) => {
                     data.append('image', item.image)
                 });
-                data.append('category', category);
-                data.append('type', type);
+                data.append('category', category.toLowerCase());
+                data.append('type', type.toLowerCase());
                 setLoading(true);
-                dispatch(createNewProduct(data));
-            }
+                dispatch(editProduct({data, id: id.id}));
+            } 
         }
         else {
             setErrorInput(true);
         }
     }
     useEffect(() => {
+        dispatch(getProductById(id.id));
+    }, []);
+    useEffect(() => {
         if(dataProduct.data){
-            swal("Success!", "Produk baru berhasil ditambahkan!", "success");
+            swal("Success!", "Produk berhasil diubah!", "success");
             setLoading(false);
             navigate('/admin/produk');
         }
-    }, [dataProduct.isSuccess])
+    }, [dataProduct.isSuccess]);
+    useEffect(() => {
+        if(dataProduct.dataProductById) {
+        setName(dataProduct.dataProductById.data.name);
+        setDesc(dataProduct.dataProductById.data.desc);
+        setPrice(dataProduct.dataProductById.data.price);
+        setPromoPrice(dataProduct.dataProductById.data.promoPrice);
+        setColors(dataProduct.dataProductById.data.colors);
+        setCategory(dataProduct.dataProductById.data.category);
+        setType(dataProduct.dataProductById.data.type);
+         }   
+    }, [dataProduct.dataProductById]);
   return (
     <Container>
-        <Typography variant="h5">TAMBAH DATA PRODUK</Typography>
+        <Typography variant="h5">EDIT DATA PRODUK</Typography>
         {errorInput &&
         <AlertContainer>
             <Alert severity="error">Semua field harus diisi!</Alert>
@@ -220,7 +236,7 @@ const AdminCreateProduct = () => {
                             labelId="select-category"
                             value={category}
                             label="Age"
-                            onChange={(e) => setCategory(e.target.value.toLowerCase())}
+                            onChange={(e) => setCategory(e.target.value)}
                         >
                             {categories.isLoading ?
                                 <div>sedang loading</div>
@@ -239,7 +255,7 @@ const AdminCreateProduct = () => {
                             labelId="select-type"
                             value={type}
                             label="Age"
-                            onChange={(e) => setType(e.target.value.toLowerCase())}
+                            onChange={(e) => setType(e.target.value)}
                         >
                             {types.map((item, index) =>(<MenuItem key={index} value={item}>{item.toUpperCase()}</MenuItem>))}
                         </Select>
@@ -249,7 +265,11 @@ const AdminCreateProduct = () => {
                 {
                 colors.map((item) => 
                     (<ImageRow key={item.id}>
-                        {item.imagePreview && <Image src={item.imagePreview} alt="images"/>}
+                        {item.imagePreview ? 
+                            <Image src={item.imagePreview} alt="images"/>
+                            :
+                            <Image src={item.image ? `${host_url}/${item.image}` : ''} alt="images"/>
+                        }
                         <InputContainer>
                             <TextField
                                 label="Warna"
@@ -278,10 +298,10 @@ const AdminCreateProduct = () => {
         {loading ? 
         <Button variant="contained" disabled color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }}>Loading ....</Button>
         :
-        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Tambah Produk Baru</Button>
+        <Button variant="contained" color="success" sx={{ width: '25%', marginLeft: '30px', marginTop: '20px' }} onClick={handleSubmit} >Edit Produk</Button>
         }
     </Container>
   )
 }
 
-export default AdminCreateProduct;
+export default AdminEditProduct;

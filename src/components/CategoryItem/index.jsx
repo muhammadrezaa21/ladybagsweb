@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { host_url } from '../../config';
+import {mobile} from "../../config/responsive";
 
 const Container = styled.div`
     flex: 1;
@@ -9,12 +11,18 @@ const Container = styled.div`
     height: 100%;
     min-width: 30vw;
     max-width: 40vw;
+    ${mobile({
+        minWidth: '100%'
+    })}
 `;
 
 const Image = styled.img`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    ${mobile({
+        objectFit: 'cover'
+    })}
 `;
 
 const Info = styled.div`
@@ -33,6 +41,10 @@ const Title = styled.h1`
     margin-bottom: 20px;
     letter-spacing: 3px;
     text-align: center;
+    ${mobile({
+        fontSize: '20px',
+        marginBottom: 0
+    })}
 `;
 const Button = styled.button`
     border: none;
@@ -41,13 +53,18 @@ const Button = styled.button`
     color: gray;
     font-weight: 600;
     cursor: pointer;
+    ${mobile({
+        fontSize: '10px',
+        padding: '5px',
+        margin: '10px 0 10px 0'
+    })}
 `;
 
 const CategoryItem = ({item}) => {
     const navigate = useNavigate();
   return (
     <Container>    
-        <Image src={require(`../../assets/image/categories/${item.image}`)} />
+        <Image src={item.image ? `${host_url}/${item.image}` : ''} />
         <Info>
             <Title>{item.name.toUpperCase()}</Title>
             <Button onClick={() => {navigate(`/kategori/${item.name.toLowerCase()}`)}}>SHOW NOW </Button>

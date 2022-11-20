@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import {login} from "../../features/user/userSlice";
-import { Typography, TextField, InputAdornment, Button} from '@mui/material';
+import { Typography, TextField, InputAdornment, Button, Alert} from '@mui/material';
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {AccountCircle, Key} from '@mui/icons-material';
@@ -24,26 +24,63 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
+const AlertContainer = styled.div``;
+
 const LoginPage = () => {
   const [input, setInput] = useState({email: '', password: ''});
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dataUser = useSelector(state => state.user);
+  const [error, setError] = useState(false);
+  const [noData, setNoData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if(dataUser.dataAuthUser) navigate('/admin');
-  }, [dataUser.dataAuthUser])
+    if(dataUser.dataAuthUser) 
+    {
+      if(!dataUser.dataAuthUser.data)setNoData(true)
+    }
+    setIsLoading(false);
+    if(dataUser.dataAuthUser.data) navigate('/admin');
+  }, [dataUser.dataAuthUser]);
 
   const handleLogin = (e) => {
-    e.preventDefault();
-    dispatch(login(input));
+    if(input.email && input.password){
+      e.preventDefault();
+      setIsLoading(true);
+      dispatch(login(input));
+    }
+    else {
+      setError(true);
+    }
   }
-
+  const handleEnter = (e) => {
+    if(e.key === 'Enter'){
+      if(input.email && input.password){
+        e.preventDefault();
+        setIsLoading(true);
+        dispatch(login(input));
+      }
+      else {
+        setError(true);
+      }
+    }
+  }
   return (
     <Container>
       <Wrapper>
         <Typography variant="h5">Login</Typography>
         <Typography variant="span">Silahkan Login ke Akun Anda</Typography>
+        {noData &&
+        <AlertContainer>
+            <Alert severity="error">Email atau Password yang anda masukan salah!</Alert>
+        </AlertContainer>
+        }
+        {error &&
+        <AlertContainer>
+            <Alert severity="error">Semua field harus diisi!</Alert>
+        </AlertContainer>
+        }
         <InputContainer>
           <TextField
             label="Email"
@@ -62,6 +99,7 @@ const LoginPage = () => {
             autoComplete="true"
             inputProps={{style: {fontSize: 13}}}
             onChange={(e) => setInput({...input, email: e.target.value})}
+            onKeyPress={handleEnter}
           />
         </InputContainer>
         <InputContainer>
@@ -79,10 +117,11 @@ const LoginPage = () => {
             fullWidth
             size='normal'
             onChange={(e) => setInput({...input, password: e.target.value})}
+            onKeyPress={handleEnter}
           />
         </InputContainer>
         <InputContainer>
-           {dataUser.isLoading ? 
+           {isLoading ? 
               <Button variant="contained" sx={{ width: '100%' }} disabled >Loading ...</Button>
               :
               <Button variant="contained" sx={{ width: '100%' }} onClick={handleLogin} >Login</Button>
