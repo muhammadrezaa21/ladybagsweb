@@ -26,7 +26,6 @@ const Wrapper = styled.div`
   })}
 `
 
-
 const Info = styled.div`
   cursor: pointer;
   color: teal; 

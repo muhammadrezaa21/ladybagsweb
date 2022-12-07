@@ -12,9 +12,9 @@ const Container = styled.div`
     overflow-x: hidden;
     position: relative;
     ${mobile({
-        paddingTop: '7vh',
+        paddingTop: '50px',
         width: '100vw',
-        height: '25vh',
+        height: '166px',
     })}
 `;
 

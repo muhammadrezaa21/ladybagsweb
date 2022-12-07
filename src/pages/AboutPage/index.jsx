@@ -8,7 +8,7 @@ import {mobile} from "../../config/responsive";
 const Container = styled.div`
   padding-top: 8.5vh;
   ${mobile({
-    paddingTop: '7vh'
+    paddingTop: '50px'
 })}
 `;
 const Wrapper = styled.div`
@@ -20,7 +20,7 @@ const MainContainer = styled.div`
   background-color: #f5fafd;
   ${mobile({
     width: '100vw',
-    height: '30vh'
+    height: '200px'
 })}
 `;
 const MainImage = styled.img`

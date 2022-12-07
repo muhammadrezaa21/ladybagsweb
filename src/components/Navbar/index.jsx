@@ -19,7 +19,7 @@ const Container = styled.div`
     -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
     ${mobile({
-        height: '7vh',
+        height: '50px',
     })}
 `;
 
@@ -127,7 +127,7 @@ const MenuItem = styled.div`
     position: relative;
     font-size: 14px;
     cursor: pointer;
-    margin-right: 35px;
+    margin-right: 25px;
     color: ${props => (props.path === props.name) ? 'teal' : ''};
     &:hover{
         color: teal;
@@ -242,6 +242,9 @@ const Navbar = () => {
                 </Link>
                 <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/tentangkami'}>
                     <MenuItem path={path[1]} name={'tentangkami'}>TENTANG KAMI</MenuItem>
+                </Link>
+                <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/admin'}>
+                    <MenuItem path={path[1]} name={'admin'}>LOGIN</MenuItem>
                 </Link>
             </Right>
             <ToogleContainer onClick={handleToogle}>

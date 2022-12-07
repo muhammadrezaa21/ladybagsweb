@@ -15,7 +15,7 @@ const Container = styled.div`
     padding: 20px;
     position: relative;
     ${mobile({
-      height: '25vh',
+      height: '166px',
     })}
 `;
 

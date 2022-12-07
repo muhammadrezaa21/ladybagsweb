@@ -12,7 +12,7 @@ import {mobile} from "../../config/responsive";
 const Container = styled.div`
     padding-top: 8.5vh;
     ${mobile({
-        paddingTop: '7vh'
+        paddingTop: '50px'
     })}
 `;
 
@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     display: flex;
     ${mobile({
         flexDirection: 'column',
-        marginTop: '3vh',
+        marginTop: '20px',
         padding: '0 20px',
     })}
 `;
@@ -35,7 +35,7 @@ const Image = styled.img`
     object-fit: cover;
     ${mobile({
         width: '100%',
-        height: '35vh',
+        height: '232px',
         objectFit: 'cover'
     })}
 `;

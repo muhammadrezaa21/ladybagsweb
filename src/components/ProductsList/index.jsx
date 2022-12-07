@@ -9,7 +9,7 @@ import {mobile} from "../../config/responsive";
 const Container = styled.div`
     padding-top: 8.5vh;
     ${mobile({
-        paddingTop: '7vh',
+        paddingTop: '50px',
     })}
 `;
 

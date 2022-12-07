@@ -96,7 +96,7 @@ const LoginPage = () => {
             size='normal'
             type='email'
             value={input.email}
-            autoComplete="true"
+            autoComplete="off"
             inputProps={{style: {fontSize: 13}}}
             onChange={(e) => setInput({...input, email: e.target.value})}
             onKeyPress={handleEnter}

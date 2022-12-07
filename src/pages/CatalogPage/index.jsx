@@ -11,14 +11,15 @@ import {mobile} from "../../config/responsive";
 const Container = styled.div`
     padding-top: 8.5vh;
     ${mobile({
-        paddingTop: '7vh',
+        paddingTop: '50px',
     })}
 `;
 const Wrapper = styled.div`
     padding: 40px;
     min-height: 45vh;
     ${mobile({
-        padding: '0 20px 0 20px'
+        padding: '0 20px 0 20px',
+        minHeight: '300px'
     })}
 `;
 const TitleContainer = styled.div`
@@ -27,7 +28,7 @@ const TitleContainer = styled.div`
     margin-bottom: 5px;
     ${mobile({
         width: '60vw',
-        height: '4vh'
+        height: '27px'
     })}
 `;
 const Title = styled.h1`

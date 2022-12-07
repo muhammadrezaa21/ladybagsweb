@@ -13,6 +13,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
 `;
 const Container = styled.div`
     display: flex;
@@ -24,21 +25,26 @@ const Container = styled.div`
     align-items: center;
     justify-content: space-between;
     position: relative;
+    border-radius: 5px;
     &:hover ${Wrapper} {
         cursor: pointer;
         opacity: 0.5;
     };
     @media only screen and (max-width: 480px) {
         min-width: 43vw;
-        height: 28vh;
+        height: 205px;
         margin: 4px 0;
     }
 `;
-
-
+const ImageContainer = styled.div`
+    background-color: red;
+    display: flex;
+    flex: 1;
+`;
 const Image = styled.img`
     height: 100%;
-    width: 100%
+    width: 100%;
+    border-radius: 5px;
 `;
 const TypeContainer = styled.div`
     position: absolute;
@@ -46,7 +52,7 @@ const TypeContainer = styled.div`
     left: 0;
     padding: 0 20px 0 7px;
     background-color: red;
-    border-radius: 0 10px 10px 0;
+    border-radius: 5px 10px 10px 0;
     z-index: 2;
 `;
 
@@ -63,8 +69,9 @@ const InfoContainer = styled.div`
     display: flex;
     width: 100%;
     flex-direction: column;
-    color: white;
+    color: gray;
     z-index: 2;
+    background-color: white
 `;
 
 const Subinfo = styled.div`
@@ -91,7 +98,9 @@ const ProductItem = ({item}) => {
     const navigate = useNavigate();
   return (
     <Container location={location} onClick={() => navigate(`/produk/${item._id}`)}>
-        <Image src={item.colors[0].image ? `${host_url}/${item.colors[0].image}` : ''} />
+        <ImageContainer>
+            <Image src={item.colors[0].image ? `${host_url}/${item.colors[0].image}` : ''} />
+        </ImageContainer>
         <Wrapper />
         {item.type !== 'normal' &&
             <TypeContainer>

@@ -82,6 +82,7 @@ const AdminCreateProduct = () => {
     const dataProduct = useSelector(state => state.product); 
     const types = ['best seller', 'new', 'normal', 'sale'];
     const [errorInput, setErrorInput] = useState(false);
+    const [readyUpload, setReadyUpload] = useState(false);
     const handleColor = (id, e) => {
         setColors(colors.map(item => {
             if(item.id === id){
@@ -115,29 +116,30 @@ const AdminCreateProduct = () => {
         if(name && price && desc && category && type) {
             colors.map(color => {
                 if(color.color && color.image){
-                    setErrorInput(false)
+                    setErrorInput(false);
+                    setReadyUpload(true);
                 } else {
                     setErrorInput(true);
                 }
             })
-            if(errorInput !== true){
-                const data = new FormData();
-                data.append('name', name.toLowerCase());
-                data.append('desc', desc.toLowerCase());
-                data.append('price', price);
-                data.append('promoPrice', promoPrice);
-                data.append('colors', JSON.stringify(colors))
-                colors.map((item) => {
-                    data.append('image', item.image)
-                });
-                data.append('category', category);
-                data.append('type', type);
-                setLoading(true);
-                dispatch(createNewProduct(data));
-            }
         }
         else {
             setErrorInput(true);
+        }
+        if(errorInput !== true && readyUpload){
+            const data = new FormData();
+            data.append('name', name.toLowerCase());
+            data.append('desc', desc.toLowerCase());
+            data.append('price', price);
+            data.append('promoPrice', promoPrice);
+            data.append('colors', JSON.stringify(colors))
+            colors.map((item) => {
+                data.append('image', item.image)
+            });
+            data.append('category', category);
+            data.append('type', type);
+            setLoading(true);
+            dispatch(createNewProduct(data));
         }
     }
     useEffect(() => {
