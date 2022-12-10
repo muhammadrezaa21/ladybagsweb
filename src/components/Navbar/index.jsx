@@ -63,12 +63,14 @@ const Right = styled.div`
     @media only screen and (max-width: 480px) {
         position: absolute;
         left: 0;
-        top: 7vh;
+        top: 50px;
         flex: 1;
         flex-direction: column;
-        width: 100%;
+        width: 92%;
         padding: 10px 10px 10px 20px;
         background-color: white;
+        opacity: 0.94;
+        border-radius: 7px;
         -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
         -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
         -box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.33);
@@ -153,7 +155,8 @@ const SubItem = styled.div`
         border-color: teal;
     }
     ${mobile({
-        border: 'none'
+        border: 'none',
+        fontSize: '11px'
     })}
 `;
 
@@ -223,20 +226,20 @@ const Navbar = () => {
                 <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/produk?search=all_product'}>
                     <MenuItem path={path[1]} name={'produk'}>PRODUK</MenuItem>
                 </Link>
-                    <MenuItem onClick={handleCategoryToogle} path={path[1]} name={'kategori'}>
-                        KATEGORI
-                        <SubItemContainer isCategoryToogle={isCategoryToogle}>
-                            {dataCategory ?
-                                dataCategory.map((item) => (
-                                    <Link key={item._id} style={{ textDecoration: 'none', color: 'black'  }} to={`/kategori/${item.name}`}>
-                                        <SubItem>{item.name.toUpperCase()}</SubItem>
-                                    </Link>
-                                ))
-                                :
-                                <div></div>
-                            }
-                        </SubItemContainer>                    
-                    </MenuItem>
+                <MenuItem onClick={handleCategoryToogle} path={path[1]} name={'kategori'}>
+                    KATEGORI
+                    <SubItemContainer isCategoryToogle={isCategoryToogle}>
+                        {dataCategory ?
+                            dataCategory.map((item) => (
+                                <Link key={item._id} style={{ textDecoration: 'none', color: 'black'  }} to={`/kategori/${item.name}`}>
+                                    <SubItem>{item.name.toUpperCase()}</SubItem>
+                                </Link>
+                            ))
+                            :
+                            <div></div>
+                        }
+                    </SubItemContainer>                    
+                </MenuItem>
                 <Link style={{ textDecoration: 'none', color: 'black'  }} to={'/katalog'}>
                     <MenuItem path={path[1]} name={'katalog'}>KATALOG</MenuItem>
                 </Link>

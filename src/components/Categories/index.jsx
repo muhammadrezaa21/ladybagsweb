@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import CategoryItem from '../CategoryItem';
 import {Skeleton} from '@mui/material';
@@ -50,22 +50,22 @@ const Arrow = styled.div`
     opacity: 0.5;
     z-index: 2;
     ${mobile({
-      display: 'none'
+      width: '25px',
+      height: '25px'
   })}
 `;
 
 const Categories = () => {
   const dataCategories = useSelector(state => state.category);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const handleClick = (direction) => {
     const slider = document.getElementById('row');
-    const width = slider.style.width;
-    console.log(slider);
-    console.log('width ', width);
+    const widthMove = windowWidth > 480 ? 800 : 335;
     if(direction === 'left'){
-      slider.scrollLeft = slider.scrollLeft - 800;
+      slider.scrollLeft = slider.scrollLeft - widthMove;
     }
     else {
-      slider.scrollLeft = slider.scrollLeft + 800;
+      slider.scrollLeft = slider.scrollLeft + widthMove;
     }
   }
   return (
@@ -73,15 +73,15 @@ const Categories = () => {
       {dataCategories.data ? 
       <>
         <Arrow direction="left" onClick={() => handleClick("left")}>
-              <ArrowLeftOutlinedIcon />
-          </Arrow>
+          <ArrowLeftOutlinedIcon />
+        </Arrow>
         <Wrapper id="row">
           {dataCategories.data.data.map((item) => (
               <CategoryItem item={item} key={item._id} />
           ))}
         </Wrapper>
         <Arrow direction="right" onClick={() => handleClick("right")}>
-            <ArrowRightOutlinedIcon />
+          <ArrowRightOutlinedIcon />
         </Arrow>
       </>
       :

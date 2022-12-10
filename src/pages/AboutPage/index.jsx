@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import { Navbar, Footer } from '../../components';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import { TentangKami1, TentangKami2, TentangKami3 } from '../../assets';
+import { TentangKami1, TentangKami2, TentangKami3, Header, AboutUs1, AboutUs2 } from '../../assets';
 import {mobile} from "../../config/responsive";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const Container = styled.div`
   padding-top: 8.5vh;
@@ -29,7 +30,7 @@ const MainImage = styled.img`
 `;
 const ContentOne = styled.div`
   position: relative;
-  background-color: #fbf0f4;
+  background-color: #f5fafd;
   padding: 50px 100px;
   display: flex;
   align-items: center;
@@ -98,17 +99,48 @@ const RowDesc = styled.div`
   display: flex;
   flex: 2;
   padding: 0 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   ${mobile({
     flex: 1,
-    padding: '0 20px'
 })}
+`;
+const DescTitle = styled.h2`
+  font-size: 40px;
+  margin-bottom: 0;
+  ${mobile({
+    fontSize: '30px',
+    marginBottom: '5px'
+  })}
 `;
 const DescText = styled.h5`
   font-size: 25px;
   font-weight: 500;
+  margin: 5px 0;
   ${mobile({
-    fontSize: '12px',
+    fontSize: '16px',
+    marginTop: 0,
+    marginBottom: 0,
+    letterSpacing: '1.5px'
 })}
+`;
+const ContactItem = styled.div`
+    display: flex;
+    align-items: center;
+    color: teal;
+    ${mobile({
+      marginTop: '5px'
+    })}
+`;
+const PhoneNumber = styled.div`
+    margin-right: 5px;
+    cursor: pointer;
+    color: black;
+    font-size: 25px;
+    ${mobile({
+      fontSize: '14px'
+    })}
 `;
 
 const About = () => {
@@ -122,35 +154,42 @@ const About = () => {
         <Container>
           <Wrapper>
               <MainContainer>
-                <MainImage src={TentangKami1} />
+                <MainImage src={Header} />
                 <ImageLayer />
               </MainContainer>
             <ContentOne>
               <RowImage>
                 <ImageContainer>
-                  <ImageContent src={TentangKami2} />
+                  <ImageContent src={AboutUs1} />
                 </ImageContainer>
               </RowImage>
               <RowDesc>
-                <DescText>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae, nulla dolor. Exercitationem quis velit officia nesciunt natus qui vitae esse excepturi magni tenetur error voluptatum reiciendis, odit accusamus cumque ea? There are many variations of passage of Lorem Ipsum available, but the majority have suffered alteration in some from, by injected humour, or randomaised words which don't look even slightly believable.
-                </DescText>
+                <DescTitle>Partnership</DescTitle>
+                <DescText>Daftar menjadi reseller kami.</DescText>
+                <DescText>Hubungi kami di : </DescText>
+                <ContactItem>
+                  <WhatsAppIcon style={{ marginRight: "10px" }} /> 
+                  <PhoneNumber onClick={() => window.open('https://wa.me/082162882109')}>
+                      0821 6288 2109
+                  </PhoneNumber>
+                </ContactItem>
               </RowDesc>
             </ContentOne>
             <ContentTwo>
               <RowImage1>
                 <ImageContainer>
-                  <ImageContent src={TentangKami3} />
+                  <ImageContent src={AboutUs2} />
                 </ImageContainer>
               </RowImage1>
               <RowDesc>
+                <DescTitle>Ready Stock</DescTitle>
                 <DescText>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae, nulla dolor. ExercitatiTwom quis velit officia nesciunt natus qui vitae esse excepturi magni tenetur error voluptatum reiciendis, odit accusamus cumque ea? There are many variations of passage of Lorem Ipsum available, but the majority have suffered alteration in some from, by injected humour, or randomaised words which don't look even slightly believable.
+                  Ready stock untuk tas fashion yang berada pada website. Kita akan update untuk stock yang sudah habis pada website.
                 </DescText>
               </RowDesc>
               <RowImage2>
                 <ImageContainer>
-                  <ImageContent src={TentangKami3} />
+                  <ImageContent src={AboutUs2} />
                 </ImageContainer>
               </RowImage2>
             </ContentTwo>

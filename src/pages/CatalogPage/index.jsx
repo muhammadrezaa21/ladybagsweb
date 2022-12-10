@@ -132,7 +132,7 @@ const CatalogPage = () => {
                             <Subtitle>{item.name.toUpperCase()}</Subtitle>
                         </NameContainer>
                         <ButtonContainer>
-                            <Button onClick={()  => window.open(`${item.link}`) }>
+                            <Button onClick={() => window.open(`${item.link}`) }>
                                 <DownloadForOfflineIcon/>
                                 <TextButton>DOWNLOAD KATALOG</TextButton>
                             </Button>

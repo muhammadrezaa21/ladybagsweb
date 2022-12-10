@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Logo as LogoWeb, InstagramLogo, FacebookLogo, BcaLogo, MandiriLogo, BriLogo, BniLogo, JneLogo, JntLogo, PosLogo} from "../../assets";
+import {Logo as LogoWeb, InstagramLogo, FacebookLogo, BcaLogo, MandiriLogo, BriLogo, JneLogo, JntLogo, PosLogo, SiCepatLogo, LionParcelLogo, TikiLogo} from "../../assets";
 import RoomIcon from '@mui/icons-material/Room';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -94,12 +94,17 @@ const Right = styled.div`
     padding: 20px;
     ${mobile({
         padding: 0,
-        marginBottom: '20px'
+        marginBottom: '20px',
+        flexDirection: 'column',
     })}
 `;
 
 const EkspedisiContainer = styled.div`
     display: flex;
+    margin-bottom: 20px;
+    ${mobile({
+        marginBottom: '10px',
+    })}
 `;
 const EkspedisiList = styled.div`
     height: 50px;
@@ -125,7 +130,7 @@ const Footer = () => {
         <Left>
             <Logo src={LogoWeb} />
             <Desc>
-                There are many variations of passage of Lorem Ipsum available, but the majority have suffered alteration in some from, by injected humour, or randomaised words which don't look even slightly believable.
+                Ladybags merupakan suplier fashion tas fashion di kota Medan. Kami menerima kerjasama untuk pengambilan partai besar maupun sistem dropship (pengiriman langsung ke alamat konsumen).
             </Desc>
             <SocialContainer>
                 <SocialIcon onClick={() => window.open('https://instagram.com/ladyshopbags')}>
@@ -138,7 +143,7 @@ const Footer = () => {
         </Left>
         <Center>
             <Title>Kontak</Title>
-            <ContactItem><RoomIcon style={{ marginRight: "10px" }} /> Medan, Sumatera Utara, Indonesia</ContactItem>
+            <ContactItem onClick={() => window.open('https://www.google.com/maps/place/Gg.+Amat+No.25,+Titi+Kuning,+Kec.+Medan+Johor,+Kota+Medan,+Sumatera+Utara+20147/@3.5313508,98.6829235,17z/data=!3m1!4b1!4m5!3m4!1s0x30313a99c991b2eb:0x6afec5d229619a05!8m2!3d3.531345!4d98.685112')}><RoomIcon style={{ marginRight: "10px" }} /> Jl Brigjen Zein Hamid Gg.Amat No 25D</ContactItem>
             <ContactItem><AccessTimeIcon style={{ marginRight: "10px" }} /> Senin - Sabtu, 08.00 s/d 16.00 WIB</ContactItem>
             <ContactItem><WhatsAppIcon style={{ marginRight: "10px" }} /> 
                 <PhoneNumber onClick={() => window.open('https://wa.me/082162882109')}>
@@ -148,15 +153,12 @@ const Footer = () => {
                 <PhoneNumber onClick={() => window.open('https://wa.me/085186336338')}>
                     0851 8633 6338 
                 </PhoneNumber>
-                </ContactItem>
+            </ContactItem>
             <PaymentContainer>
                 <SubPaymentContainer>
                     <Payment src={BcaLogo} />
-                    <Payment src={BriLogo} />
-                </SubPaymentContainer>
-                <SubPaymentContainer>
-                    <Payment src={BniLogo} />
                     <Payment src={MandiriLogo}/>
+                    <Payment src={BriLogo} />
                 </SubPaymentContainer>
             </PaymentContainer>
         </Center>
@@ -167,10 +169,21 @@ const Footer = () => {
                     <Ekspedisi src={JneLogo} /> 
                 </EkspedisiList>
                 <EkspedisiList>
+                    <Ekspedisi src={TikiLogo} />
+                </EkspedisiList>
+                <EkspedisiList>
                     <Ekspedisi src={PosLogo} />
+                </EkspedisiList>
+            </EkspedisiContainer>
+            <EkspedisiContainer>
+                <EkspedisiList>
+                    <Ekspedisi src={SiCepatLogo} /> 
                 </EkspedisiList>
                 <EkspedisiList>
                     <Ekspedisi src={JntLogo} />
+                </EkspedisiList>
+                <EkspedisiList>
+                    <Ekspedisi src={LionParcelLogo} />
                 </EkspedisiList>
             </EkspedisiContainer>
         </Right>

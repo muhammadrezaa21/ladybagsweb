@@ -8,6 +8,9 @@ import BniLogo from "./bni-logo.png";
 import JneLogo from "./jne.png";
 import JntLogo from "./j&t.png";
 import PosLogo from "./pos-logo.png";
+import SiCepatLogo from "./sicepat.png";
+import TikiLogo from "./tiki.png";
+import LionParcelLogo from "./lionparcel.png";
 
 export {
   Logo,
@@ -20,4 +23,7 @@ export {
   JneLogo,
   JntLogo,
   PosLogo,
+  SiCepatLogo,
+  LionParcelLogo,
+  TikiLogo,
 };

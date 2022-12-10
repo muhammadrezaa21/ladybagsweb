@@ -33,49 +33,14 @@ const Slide = styled.div`
     width: 100vw;
     display: flex;
     align-items: center;
-    background-color: #${props => props.bg}
+    background-color: white;
 `;
-
-const ImageContainer = styled.div`
-    display: flex;
-    flex: 1;
-    height: 100%;
-    justify-content: center;
-`;
-
-const InfoContainer = styled.div`
-    flex: 1;
-    padding: 50px;
-    ${mobile({
-        padding: '0px 15px 0px 10px',
-    })}
-`;
-
 const Image = styled.img`
     height: 100%;
+    width: 100%;
 `;
-
-const Title = styled.h1`
-    font-size: 70px;
-    ${mobile({
-        fontSize: '20px',
-    })}
-`;
-
-const Desc = styled.p`
-    margin: 50px 0;
-    font-size: 20px;
-    letter-spacing: 3px;
-    ${mobile({
-        fontSize: '8px',
-        margin: '0px 0px 0px 0px',
-        letterSpacing: '2px'
-    })}
-`;
-
 const Slider = ({dataBanner}) => {
    const [slideIndex, setSlideIndex] = useState(0); 
-   const backgroundColor = ["f5fafd", "fbf0f4", "f5fafd", "f5fafd", "fbf0f4", "f5fafd"];
    useEffect(() => {
         setTimeout(() => {
             setSlideIndex(slideIndex < (dataBanner.data.length - 1) ? slideIndex + 1 : 0);
@@ -86,14 +51,8 @@ const Slider = ({dataBanner}) => {
         {dataBanner ? 
             <Wrapper slideIndex={slideIndex}>
                 {dataBanner.data.map((item, index) => (
-                    <Slide bg={backgroundColor[index]} key={item._id}>
-                        <ImageContainer>
-                            <Image src={item.image ? `${host_url}/${item.image}` : ''} />
-                        </ImageContainer>
-                        <InfoContainer>
-                            <Title>{item.title.toUpperCase()}</Title>
-                            <Desc>{item.desc.toUpperCase()}</Desc>
-                        </InfoContainer>
+                    <Slide onClick={() => window.open(`${item.desc}`)} key={item._id}>
+                        <Image src={item.image ? `${host_url}/${item.image}` : ''} />
                     </Slide>
                 ))}
             </Wrapper>

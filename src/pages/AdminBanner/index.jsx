@@ -71,7 +71,7 @@ const AdminBanner = () => {
       )
     },
     },
-    {field: 'desc', headerName: "DESKRIPSI BANNER", width: 400},
+    {field: 'desc', headerName: "LINK", width: 400},
     { field: 'image', headerName: 'GAMBAR KATEGORI', width: 200,
     renderCell: (params) => {
         return(

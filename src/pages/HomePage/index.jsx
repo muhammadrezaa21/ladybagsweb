@@ -31,7 +31,7 @@ const HomePage = () => {
         <Container>
           <Skeleton variant="rounded" width={'100%'} height={'100%'} />
         </Container>
-      }
+      } 
       <Categories />
       <Products page="home"/>
       <Footer />

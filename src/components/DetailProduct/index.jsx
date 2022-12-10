@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { formatRupiah } from '../../config/formatRupiah';
 import {useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {Skeleton} from "@mui/material";
 import { host_url } from '../../config';
@@ -28,11 +28,18 @@ const Wrapper = styled.div`
 `;
 const ImageContainer = styled.div`
     flex: 1;
-`; 
+`;
+const imageAnimation = keyframes`
+    0% {opacity: 0}
+    100% {opacity: 1}
+`;
 const Image = styled.img`
     width: 100%;
     height: 80vh;
     object-fit: cover;
+    animation-name: ${imageAnimation};
+    animation-duration: 2s;
+    display: ${props => props.activeColor === props.index ? 'block' : 'none'};
     ${mobile({
         width: '100%',
         height: '232px',
@@ -91,13 +98,13 @@ const ColorTitle = styled.span`
     })} 
 `;
 const Color = styled.div`
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: ${props => props.color};
-    border: 1px solid rgba(0,0,0,.125);
+    padding: 3px;
     margin-right: 7px;
+    border: 1px solid gray;
+    border-radius: 3px;
     cursor: pointer;
+    background-color: ${props => props.index === props.color ? 'teal' : 'white'};
+    color: ${props => props.index === props.color ? 'white' : 'black'};
 `;
 const ButtonContainer = styled.button`
     display: flex;
@@ -138,7 +145,9 @@ const DetailProduct = () => {
         {data ?
             <>
                 <ImageContainer>
-                    <Image src={data.colors[color].image ? `${host_url}/${data.colors[color].image}` : ''} />
+                    {data.colors.map((item, index) => 
+                        <Image index={index} activeColor={color} src={item.image ? `${host_url}/${item.image}` : ''} />
+                    )}
                 </ImageContainer>
                 <InfoContainer>
                     <Title>{dataProduct.dataProductById.data.name.toUpperCase()}</Title>
@@ -154,7 +163,7 @@ const DetailProduct = () => {
                     <ColorContainer>
                         <ColorTitle>Colors :</ColorTitle>
                         {dataProduct.dataProductById.data.colors.map((item, index) => 
-                            <Color color={item.color} key={index} onClick={() => setColor(index)} />
+                            <Color key={index} index={index} color={color} onClick={() => setColor(index)}>{item.color.toUpperCase()}</Color>
                         )}
                     </ColorContainer>
                     <ButtonContainer>

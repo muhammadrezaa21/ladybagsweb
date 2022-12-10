@@ -17,6 +17,7 @@ const Container = styled.div`
  
 const Wrapper = styled.div`
     display: flex;
+    background-color: #f5fbfd;
     padding: ${props => props.page === 'home' ? '20px' : '20px 40px'};
     flex-wrap: wrap;
     justify-content: ${props => props.page === 'home' ? 'space-between' : ''};
@@ -58,8 +59,8 @@ const Products = ({page, data, productType}) => {
                 {
                   dataProduct.dataProductHome ?
                   <>
-                    {dataProduct.dataProductHome.data.map((item) => 
-                      (<ProductItem item={item} key={item._id} />)
+                    {dataProduct.dataProductHome.data.map((item, index) => 
+                      (<ProductItem index={index} item={item} key={item._id} />)
                     )}
                   </>  
                   :

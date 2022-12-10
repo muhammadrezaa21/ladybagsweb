@@ -129,7 +129,7 @@ const AdminEditBanner = () => {
             </InputContainer>
             <InputContainer>
                 <TextField
-                    label="Deskripsi Banner"
+                    label="Link Banner"
                     variant="filled"
                     fullWidth
                     size='normal'
