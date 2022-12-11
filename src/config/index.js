@@ -1,2 +1,2 @@
-export const host_url = "http://localhost:4000";
-export const host_url_api = "http://localhost:4000/api/v1/";
+export const host_url = "https://fair-jade-bear-suit.cyclic.app";
+export const host_url_api = "https://fair-jade-bear-suit.cyclic.app/api/v1/";
