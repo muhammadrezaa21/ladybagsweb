@@ -1,29 +1,29 @@
 import React, { useEffect } from "react";
-import HomePage from "./HomePage";
-import ProductsPage from "./ProductsPage";
-import CategoriesPage from "./CategoriesPage";
-import DetailPage from "./DetailPage";
-import CatalogPage from "./CatalogPage";
-import AboutPage from "./AboutPage";
-import AdminPage from "./AdminPage";
-import AdminProduct from "./AdminProduct";
-import AdminDetailProduct from "./AdminDetailProduct";
-import AdminCreateProduct from "./AdminCreateProduct";
-import AdminEditProduct from "./AdminEditProduct";
-import AdminCategory from "./AdminCategory";
-import AdminCreateCategory from "./AdminCreateCategory";
-import AdminEditCategory from "./AdminEditCategory";
-import AdminBanner from "./AdminBanner";
-import AdminCreateBanner from "./AdminCreateBanner";
-import AdminEditBanner from "./AdminEditBanner";
-import AdminCatalog from "./AdminCatalog";
-import AdminCreateCatalog from "./AdminCreateCatalog";
-import AdminEditCatalog from "./AdminEditCatalog";
-import AdminUser from "./AdminUser";
-import AdminCreateUser from "./AdminCreateUser";
-import AdminEditPassword from "./AdminEditPassword";
-import LoginPage from "./LoginPage";
-import { getAllCategory } from "../features/category/categorySlice";
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import DetailPage from "./pages/DetailPage";
+import CatalogPage from "./pages/CatalogPage";
+import AboutPage from "./pages/AboutPage";
+import AdminPage from "./pages/AdminPage";
+import AdminProduct from "./pages/AdminProduct";
+import AdminDetailProduct from "./pages/AdminDetailProduct";
+import AdminCreateProduct from "./pages/AdminCreateProduct";
+import AdminEditProduct from "./pages/AdminEditProduct";
+import AdminCategory from "./pages/AdminCategory";
+import AdminCreateCategory from "./pages/AdminCreateCategory";
+import AdminEditCategory from "./pages/AdminEditCategory";
+import AdminBanner from "./pages/AdminBanner";
+import AdminCreateBanner from "./pages/AdminCreateBanner";
+import AdminEditBanner from "./pages/AdminEditBanner";
+import AdminCatalog from "./pages/AdminCatalog";
+import AdminCreateCatalog from "./pages/AdminCreateCatalog";
+import AdminEditCatalog from "./pages/AdminEditCatalog";
+import AdminUser from "./pages/AdminUser";
+import AdminCreateUser from "./pages/AdminCreateUser";
+import AdminEditPassword from "./pages/AdminEditPassword";
+import LoginPage from "./pages/LoginPage";
+import { getAllCategory } from "./features/category/categorySlice";
 import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -35,7 +35,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" exact element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/produk" element={<ProductsPage />} />
         <Route path="/kategori/:id" element={<CategoriesPage />} />
         <Route path="/produk/:id" element={<DetailPage />} />
