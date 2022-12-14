@@ -1,2 +1,2 @@
-export const host_url = "http://balancia.co.id:4000/";
-export const host_url_api = "http://balancia.co.id:4000/api/v1/";
+export const host_url = "https://ladybags.virnamaritime.com/";
+export const host_url_api = "https://ladybags.virnamaritime.com/api/v1/";
