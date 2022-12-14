@@ -1,2 +1,2 @@
-export const host_url = "https://ladybags.virnamaritime.com/";
-export const host_url_api = "https://ladybags.virnamaritime.com/api/v1/";
+export const host_url = "https://ladybags.balancia.co.id/";
+export const host_url_api = "https://ladybags.balancia.co.id/api/v1/";
