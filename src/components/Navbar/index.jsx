@@ -156,7 +156,7 @@ const SubItem = styled.div`
     }
     ${mobile({
         border: 'none',
-        fontSize: '11px'
+        fontSize: '13px'
     })}
 `;
 
